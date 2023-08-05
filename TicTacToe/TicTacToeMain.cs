@@ -4,37 +4,35 @@ public class Program{
 
     //All program variables
 
-    public string letter="";
+    public string humanLetter="";
 
-    bool finished=false;
+    bool finishedGame=false;
 
-    int chance=0;
+    string gameLetterWinner="";
 
-    string win="";
+    public string gameWinner="";
 
-    public string winperson="";
-
-    public string completter="";
+    public string opponentLetter="";
 
     int counter=0;
 
     public string[] board={" "," "," "," "," "," "," "," "," "};
 
-    public bool draw=false;
+    public bool drawGame=false;
 
-    string invalid="''/'\'`~+-;:'?|{}<>.,[]()@!#$%^&*-_=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+    string invalidCharacters="''/'\'`~+-;:'?|{}<>.,[]()@!#$%^&*-_=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
 
-    string playerchance="humanplayer";
+    string playerTurn="humanplayer";
 
-    public string input2="";
+    public string cpuDifficulty="";
 
-    public bool aiplayed=false;
+    public bool aiPlayed=false;
 
     
     
     //main game function
 
-    public void playfunction(){
+    public void gameFunction(){
         Console.WriteLine();
         Console.WriteLine();
         Console.WriteLine();
@@ -45,23 +43,24 @@ public class Program{
     
         if(input!="n"){
             Console.WriteLine("WHAT LETTER DO YOU WANT TO CHOOSE (X/O)");
-            this.letter=Console.ReadLine().ToUpper();
-            if(this.letter=="X"){
-                this.completter="O";
+            this.humanLetter=Console.ReadLine().ToUpper();
+            if(this.humanLetter=="X"){
+                this.opponentLetter="O";
             }
-            else if(this.letter=="O"){
-                this.completter="X";
+            else if(this.humanLetter=="O"){
+                this.opponentLetter="X";
             }
-            if((this.letter!="X" && this.letter!="O") || this.letter==""){
+            if((this.humanLetter!="X" && this.humanLetter!="O") || this.humanLetter==""){
                 Console.WriteLine();
                 Console.WriteLine("PLEASE ENTER A VALID CHARACTER");
-                this.playfunction();
+                this.gameFunction();
             }
+
             Console.WriteLine("DO YOU WANT TO PLAY AGAINST NOOBIE CPU, OR PRO CPU?(1 OR 2)");
-            input2=Console.ReadLine();
-            if(input2!="1" && input2!="2"){
+            this.cpuDifficulty=Console.ReadLine();
+            if(this.cpuDifficulty!="1" && this.cpuDifficulty!="2"){
                 Console.WriteLine("INVALID VALUE, PLEASE TRY AGAIN");
-                this.playfunction();
+                this.gameFunction();
             }
             
         }
@@ -70,25 +69,25 @@ public class Program{
             Console.WriteLine("GOODBYE!");
             return;
         }
-        this.inputletter();
+        this.humanInput();
     }
 
-    public void chanceswap(string p){
-        if(p=="humanplayer" && this.input2=="1"){
-            this.playerchance="dumbplayer";
-            this.computerinputletter();
+    public void chanceSwap(string p){
+        if(p=="humanplayer" && this.cpuDifficulty=="1"){
+            this.playerTurn="dumbplayer";
+            this.randomCpuInput();
         }
-        else if(p=="dumbplayer" && this.input2=="1"){
-            this.playerchance="humanplayer";
-            this.inputletter();
+        else if(p=="dumbplayer" && this.cpuDifficulty=="1"){
+            this.playerTurn="humanplayer";
+            this.humanInput();
         }
-        else if(p=="humanplayer" && this.input2=="2"){
-            this.playerchance="aiplayer";
+        else if(p=="humanplayer" && this.cpuDifficulty=="2"){
+            this.playerTurn="aiplayer";
             this.AI();
         }
-        else if(p=="aiplayer" && this.input2=="2"){
-            this.playerchance="humanplayer";
-            this.inputletter();
+        else if(p=="aiplayer" && this.cpuDifficulty=="2"){
+            this.playerTurn="humanplayer";
+            this.humanInput();
         }
     }
     public static void Main(String[] args){
@@ -96,35 +95,34 @@ public class Program{
 
          Console.ForegroundColor = ConsoleColor.Green;
          
-         startKey.playfunction();
+         startKey.gameFunction();
     
          startKey.getEmptySquares(startKey.board);
      }
 
     //Human player function
-    public void inputletter(){
+    public void humanInput(){
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine();
         Console.WriteLine();
         Console.WriteLine("WHICH POSITION DO YOU WANT TO ENTER? (0-8)");
-        string inputnum=Console.ReadLine();
+        string inputIndex=Console.ReadLine();
         this.counter=0;
         
-
-        if(inputnum.Length>1 || inputnum.Length==0 || inputnum=="9"){
+        if(inputIndex.Length>1 || inputIndex.Length==0 || inputIndex=="9"){
             Console.WriteLine();
             Console.WriteLine("PLEASE ENTER A VALID POSITION NUMBER (0-8)");
             Console.WriteLine();
-            this.inputletter();
+            this.humanInput();
         }
-        else if(inputnum.Length==1){
-            if((int)char.Parse(inputnum)>=48 && (int)char.Parse(inputnum)<=56){
-                int pos=Convert.ToInt32(inputnum);
-                if(this.freespace(board,pos)){
-                    this.board[pos]=this.letter;
+        else if(inputIndex.Length==1){
+            if((int)char.Parse(inputIndex)>=48 && (int)char.Parse(inputIndex)<=56){
+                int positionIndex=Convert.ToInt32(inputIndex);
+                if(this.freeSpace(board,positionIndex)){
+                    this.board[positionIndex]=this.humanLetter;
                 }
                 else{
-                    this.inputletter();
+                    this.humanInput();
                 }
                 Console.WriteLine();
                 Console.WriteLine("YOUR INPUT:");
@@ -135,13 +133,12 @@ public class Program{
                 Console.WriteLine();
                 Console.WriteLine("PLEASE ENTER A VALID POSITION NUMBER (0-8)");
                 Console.WriteLine();
-                this.inputletter();
+                this.humanInput();
             }
             
-            this.aiplayed=false;
-           
+            this.aiPlayed=false;
             
-            this.winner(board);
+            this.gameDecider(board);
         }
 
        
@@ -150,20 +147,20 @@ public class Program{
 
     /*CPU Function*/
 
-    public void computerinputletter(){
+    public void randomCpuInput(){
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine();
         Random random=new Random();
-        int randomnum=random.Next(0,9);
-        while(!this.freespace(board,randomnum)){
-            randomnum=random.Next(0,9);
+        int randomIndex=random.Next(0,9);
+        while(!this.freeSpace(board,randomIndex)){
+            randomIndex=random.Next(0,9);
         }
 
-        this.board[randomnum]=this.completter;
+        this.board[randomIndex]=this.opponentLetter;
         Console.WriteLine();
         Console.WriteLine("CPU'S INPUT:");
         Console.WriteLine();
-        this.winner(this.board);
+        this.gameDecider(this.board);
 
 
     }
@@ -177,8 +174,8 @@ public class Program{
         Console.WriteLine();
         Console.WriteLine("CPU'S INPUT:");
         Console.WriteLine();
-        this.aiplayed=true;
-        this.winner(this.board);
+        this.aiPlayed=true;
+        this.gameDecider(this.board);
 
         
     }
@@ -193,8 +190,7 @@ public class Program{
             
             if(board[i]==" "){
 
-
-                board[i]=this.completter;
+                board[i]=this.opponentLetter;
                 
                 int eval=this.MiniMax(board,true);
                 
@@ -207,9 +203,8 @@ public class Program{
             }
     
         }
-       
         
-        this.board[bestMove]=this.completter;
+        this.board[bestMove]=this.opponentLetter;
 
         return;
         
@@ -217,14 +212,13 @@ public class Program{
     }
 
     public int MiniMax(string[] board, bool isMaximizing){
-        
-    
+
         //Evaluation part of the function
-        if(this.winnerAI(board,this.letter)){
+        if(this.gameDeciderAI(board,this.humanLetter)){
             
             return 10;
         }
-        else if(this.winnerAI(board,this.completter)){
+        else if(this.gameDeciderAI(board,this.opponentLetter)){
             
             return -10;
         }
@@ -238,15 +232,12 @@ public class Program{
             for(int i=0; i<9;i++){
             
                 if(board[i]==" "){
-                    
 
-                    board[i]=this.letter;
+                    board[i]=this.humanLetter;
                     
                     int eval=this.MiniMax(board,false);
 
                     board[i]=" ";
-                    
-                    
                     
                     if(eval>maxEval){
                         maxEval=eval;
@@ -265,12 +256,10 @@ public class Program{
             for(int i=0; i<9;i++){
                 if(board[i]==" "){
 
-                    board[i]=this.completter;
+                    board[i]=this.opponentLetter;
                     
                     int eval=this.MiniMax(board,true);
 
-                    
-                    
                     board[i]=" ";
                 
                     if(eval<minEval){
@@ -287,7 +276,7 @@ public class Program{
     return 0;
     }
 
-    public bool winnerAI(string[] board, string mark){
+    public bool gameDeciderAI(string[] board, string mark){
         
         
         if(string.Compare(board[0],board[1])==0 && string.Compare(board[1],board[2])==0 && (board[0]==mark)){
@@ -348,7 +337,7 @@ public class Program{
 
     
     //Function to check if all spaces in the array are occupied
-    public bool finishspace(string[] board){
+    public bool isBoardComplete(string[] board){
         int counter=0;
         
         
@@ -368,9 +357,9 @@ public class Program{
     }
 
     //Function to check if space is available within the array
-    public bool freespace(string[] board, int position){
+    public bool freeSpace(string[] board, int position){
         if(this.board[position]=="X" || this.board[position]=="O"){
-            if(this.playerchance=="humanplayer"){
+            if(this.playerTurn=="humanplayer"){
                 Console.WriteLine("SORRY, THAT SPACE IS ALREADY TAKEN!");
             }
             
@@ -385,72 +374,72 @@ public class Program{
     
     
     //All conditions that check if there is a winner or not
-    public string winner(string[] board){
+    public string gameDecider(string[] board){
         
         
         if(string.Compare(board[0],board[1])==0 && string.Compare(board[1],board[2])==0 && (board[0]=="X" || board[0]=="O")){
-            this.win=board[0];
+            this.gameLetterWinner=board[0];
         }
         
         /*3,4,4,5*/
         else if(string.Compare(board[3],board[4])==0 && string.Compare(board[4],board[5])==0 && (board[3]=="X" || board[3]=="O")){
-            this.win=board[3];
+            this.gameLetterWinner=board[3];
         }
         /*6,7,7,8*/
         else if(string.Compare(board[6],board[7])==0 && string.Compare(board[7],board[8])==0 && (board[6]=="X" || board[6]=="O")){
-            this.win=board[6];
+            this.gameLetterWinner=board[6];
         }
         /*0,3,3,6*/
         else if(string.Compare(board[0],board[3])==0 && string.Compare(board[3],board[6])==0 && (board[0]=="X" || board[0]=="O")){
-            this.win=board[0];
+            this.gameLetterWinner=board[0];
         }
         /*1,4,4,7*/
         else if(string.Compare(board[1],board[4])==0 && string.Compare(board[4],board[7])==0 && (board[1]=="X" || board[1]=="O")){
-            this.win=board[1];
+            this.gameLetterWinner=board[1];
         }
         /*2,5,5,8*/
         else if(string.Compare(board[2],board[5])==0 && string.Compare(board[5],board[8])==0 && (board[2]=="X" || board[2]=="O")){
-            this.win=board[2];
+            this.gameLetterWinner=board[2];
         }
         /*0,4,4,8*/
         else if(board[0]==board[4] && board[4]==board[8] && (board[0]=="X" || board[0]=="O")){
-            this.win=board[0];
+            this.gameLetterWinner=board[0];
         }
         /*2,4,4,6*/
         else if(string.Compare(board[2],board[4])==0 && string.Compare(board[4],board[6])==0 && (board[2]=="X" || board[2]=="O")){
-            this.win=board[2];
+            this.gameLetterWinner=board[2];
         }
         
-        if(this.win=="" && this.finishspace(board)==true){
-            this.finished=true;
-            this.draw=true;
+        if(this.gameLetterWinner=="" && this.isBoardComplete(board)==true){
+            this.finishedGame=true;
+            this.drawGame=true;
             
             
             
         }
         
-        if(this.win=="X"){
-            this.finished=true;
+        if(this.gameLetterWinner=="X"){
+            this.finishedGame=true;
             Console.WriteLine();
-            this.winperson="X";
+            this.gameWinner="X";
             
             
            
         }
-        else if(this.win=="O"){
-            this.finished=true;
+        else if(this.gameLetterWinner=="O"){
+            this.finishedGame=true;
             Console.WriteLine();
-            this.winperson="O";
+            this.gameWinner="O";
             
         }
         
         
-        this.callprintboard();
+        this.callPrintBoard();
         return " ";
     }
 
     public string winstorer(string winstore){
-        if(this.draw){
+        if(this.drawGame){
             return "TIE";
         }
         else{
@@ -459,13 +448,13 @@ public class Program{
         
     }
 
-    public void callprintboard(){
-        this.printboard();
+    public void callPrintBoard(){
+        this.printBoard();
     }
 
     //Function that prints and the board and also displays the result of the game
 
-    public void printboard(){
+    public void printBoard(){
 
         Console.Write($"   {this.board[0]}   "+"|"+$"   {this.board[1]}   "+"|"+$"   {this.board[2]}   ");
         
@@ -482,10 +471,10 @@ public class Program{
         Console.Write($"   {this.board[6]}   "+"|"+$"   {this.board[7]}   "+"|"+$"   {this.board[8]}   ");
         
        
-        if(this.finished){
+        if(this.finishedGame){
             Console.ForegroundColor = ConsoleColor.DarkBlue;
-            if(this.winperson=="X"){
-                if(this.winperson==this.letter){
+            if(this.gameWinner=="X"){
+                if(this.gameWinner==this.humanLetter){
                     Console.WriteLine();
                     Console.WriteLine();
                     Console.WriteLine("YOU ARE THE WINNER!");
@@ -507,8 +496,8 @@ public class Program{
                 }
                 
             }
-            else if(this.winperson=="O"){
-                if(this.winperson==this.letter){
+            else if(this.gameWinner=="O"){
+                if(this.gameWinner==this.humanLetter){
                     Console.WriteLine();
                     Console.WriteLine();
                     Console.WriteLine("YOU ARE THE WINNER!");
@@ -530,7 +519,7 @@ public class Program{
                 }
                 
             }
-            else if(this.draw==true){
+            else if(this.drawGame==true){
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine("ITS A DRAW MATCH!");
@@ -545,7 +534,7 @@ public class Program{
         }
         else{
 
-            this.chanceswap(this.playerchance);
+            this.chanceSwap(this.playerTurn);
             
         }
         
