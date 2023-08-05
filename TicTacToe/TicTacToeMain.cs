@@ -72,6 +72,7 @@ public class Program{
         this.humanInput();
     }
 
+    //Method that is responsible for swapping turns between CPU and human player
     public void chanceSwap(string p){
         if(p=="humanplayer" && this.cpuDifficulty=="1"){
             this.playerTurn="dumbplayer";
@@ -90,6 +91,8 @@ public class Program{
             this.humanInput();
         }
     }
+
+    //Main method that starts the game
     public static void Main(String[] args){
          Program startKey = new Program();
 
@@ -100,7 +103,7 @@ public class Program{
          startKey.getEmptySquares(startKey.board);
      }
 
-    //Human player function
+    //Human player method
     public void humanInput(){
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine();
@@ -145,7 +148,7 @@ public class Program{
         
     }
 
-    /*CPU Function*/
+    //Random CPU Player method
 
     public void randomCpuInput(){
         Console.ForegroundColor = ConsoleColor.Red;
@@ -165,7 +168,7 @@ public class Program{
 
     }
     
-
+    //AI CPU Player method
     public void AI(){
 
         this.bestMoveFunction();
@@ -180,6 +183,7 @@ public class Program{
         
     }
 
+    //Method to call the minimax function to determine the best move
      public void bestMoveFunction(){
 
         int bestEval=1000;
@@ -210,6 +214,8 @@ public class Program{
         
 
     }
+
+    //A recursive function that contains a maximizer and minimizer. Here the CPU is the minimizer and returns the best move for itself.
 
     public int MiniMax(string[] board, bool isMaximizing){
 
@@ -276,6 +282,8 @@ public class Program{
     return 0;
     }
 
+    //Game deciding function, but its different for the AI is this is a bool method.
+
     public bool gameDeciderAI(string[] board, string mark){
         
         
@@ -314,6 +322,7 @@ public class Program{
         return false;
     }
 
+    //Checks if the game is a draw, but only for the AI player
     public bool checkDraw(string[] board){
         foreach(string i in board){
             if(i==" "){
@@ -322,6 +331,8 @@ public class Program{
         }
         return true;
     }
+
+    //Returns an array with all current empty spaces in the game board
 
     public List<int> getEmptySquares(string[] board){
         
@@ -336,7 +347,7 @@ public class Program{
     }
 
     
-    //Function to check if all spaces in the array are occupied
+    //Method to check if all spaces in the array are occupied
     public bool isBoardComplete(string[] board){
         int counter=0;
         
@@ -356,7 +367,7 @@ public class Program{
         }
     }
 
-    //Function to check if space is available within the array
+    //Boolean method to check if any spaces is available within the array
     public bool freeSpace(string[] board, int position){
         if(this.board[position]=="X" || this.board[position]=="O"){
             if(this.playerTurn=="humanplayer"){
@@ -373,7 +384,7 @@ public class Program{
         
     
     
-    //All conditions that check if there is a winner or not
+    //Overall game deciding method that uses conditions and evaluates to check if there is a winner or not
     public string gameDecider(string[] board){
         
         
